@@ -1,0 +1,13 @@
+{
+  "name": "creative-coding",
+  "version": "1.0.0",
+  "description": "Creative Coding Class Portfolio",
+  "author": "Justin Martin <info@justinlmartin.com>",
+  "private": true,
+  "scripts": {
+    "upload": "scripts/uploadFiles.sh"
+  },
+  "dependencies": {
+    "p5": "^0.9.0"
+  }
+}
