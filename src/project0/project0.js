@@ -47,7 +47,7 @@ const s = (sketch) => {
         if (transformType !== "NONE") {
             transforming = true;
         }
-    }
+    };
 
     function updateText () {
         location = "mouseX: " + (sketch.mouseX - originX) + ", mouseY: " + (sketch.mouseY - originY);
@@ -60,32 +60,32 @@ const s = (sketch) => {
         sketch.text(transformLength, textX, textY + 70);
         sketch.text(transformCounter, textX, textY + 90);
         sketch.text(rotation, textX, textY + 110);
-    }
+    };
 
     sketch.mousePressed = () => {
         if (transforming === false) {
             decideTransformation(sketch.mouseX, sketch.mouseY);
         }
-    }
+    };
 
     sketch.mouseReleased = () => {
         if (transformType === "MOVE") {
             transformType = "NONE";
             transforming = false;
         }
-    }
+    };
 
     sketch.mouseDragged = () => {
         if (transformType === "MOVE") {
             originX = sketch.mouseX;
             originY = sketch.mouseY;
         }
-    }
+    };
 
     sketch.preload = () => {
         bg = sketch.loadImage('data/swirly.jpg');
         flower = sketch.loadImage('data/sunflower.png');
-    }
+    };
 
     sketch.setup = () => {
         sketch.createCanvas(491, 368);
@@ -139,4 +139,4 @@ const s = (sketch) => {
     };
 };
 
-let myp5 = new p5(s);
+let p5_0 = new p5(s);

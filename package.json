@@ -5,7 +5,7 @@
   "author": "Justin Martin <info@justinlmartin.com>",
   "private": true,
   "scripts": {
-    "upload": "scripts/uploadFiles.sh"
+    "upload": "sh scripts/uploadFiles.sh"
   },
   "dependencies": {
     "p5": "^0.9.0"
