@@ -42,7 +42,6 @@ const s = (sketch) => {
         mainCanvas.parent("canvas");
         leftAngleSlider = document.getElementById("leftAngleSlider");
         leftAngleSlider.oninput = function(){inputChange()};
-        console.log(leftAngleSlider);
         rightAngleSlider = document.getElementById("rightAngleSlider");
         rightAngleSlider.oninput = function(){inputChange()};
         branchesSlider = document.getElementById("branches");

@@ -1,0 +1,15 @@
+input {
+    display: block;
+}
+
+label {
+    display: block;
+}
+
+select {
+    display: block;
+}
+
+#inputs > div {
+    margin: 5px 5px 5px 5px;
+}
