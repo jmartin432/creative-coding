@@ -1,24 +1,29 @@
 const s = (sketch) => {
 
     let socket;
+    let host = '127.0.0.1';
+    let port = '3001';
+    let mainCanvas;
+    let width = 400;
+    let height = 400;
 
     sketch.mouseDragged = () => {
-        console.log(sketch.mouseX, sketch.mouseY);
         let x = sketch.mouseX;
         let y = sketch.mouseY;
-        let pitch = ((x - 200) / 200) * 1600;
-        let amplitude = ((400 - y) / 400);
+        let pitch = ((x - (width / 2)) / (width / 2)) * 1600;
+        let amplitude = ((height - y) / height);
         let data = {
             pitch: pitch,
             amplitude: amplitude
         };
-        socket.emit('mouse', data);
+        socket.emit('webCam', data);
     };
 
     sketch.setup = () => {
-
-        socket = io.connect('http://localhost:3001');
-        sketch.createCanvas(400, 400);
+        let url = `http://${host}:${port}`;
+        socket = io.connect(url);
+        mainCanvas = sketch.createCanvas(width, height);
+        mainCanvas.parent('canvas')
         };
 
     sketch.draw = () => {

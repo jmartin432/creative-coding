@@ -16,11 +16,10 @@ server.listen(port);
 let client = dgram.createSocket('udp4');
 
 let io = socket;
-io.set('origins', 'http://*:3001/project6.html');
+io.set('origins', 'http://127.0.0.1:3001/project6*.html');
 io.sockets.on('connection', newConnection);
 
-function sendMessage(data){
-    let message = `1 ${data.pitch} ${data.amplitude}`;
+function sendMessage(message){
     client.send(message, 0, message.length, udpPort, host, function(err, bytes) {
         console.log(message.length);
         if (err) throw err;
@@ -31,11 +30,28 @@ function sendMessage(data){
 
 function newConnection(socket) {
     console.log(`new connection, ID: ${socket.id}`);
-    socket.on('mouse', browserMsg);
+    socket.on('mouseBall', mouseBallMsg);
+    socket.on('drumPad', drumPadMsg);
+    socket.on('webCam', webCamMsg);
 
-    function browserMsg(data){
+    function mouseBallMsg(data){
         console.log(data);
-        sendMessage(data)
+        let message = `1 ${data.pitch} ${data.amplitude}`;
+        sendMessage(message)
+    }
+
+    function drumPadMsg(data){
+        console.log(data);
+        let message = `2 ${data.number} ${data.amplitude}`;
+        sendMessage(message)
+    }
+
+    function webCamMsg(data){
+        console.log(data);
+        let message = `3 ${data.pitch} ${data.amplitude}`;
+        sendMessage(message)
     }
 }
+
+console.log(`Server listening on ${host}:${port}`);
 
