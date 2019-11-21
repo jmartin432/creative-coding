@@ -2,18 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Project 2</title>
+    <title>Project 3</title>
+    <link rel="stylesheet" type="text/css" href="project2.css">
     <script src="../../node_modules/p5/lib/p5.min.js"></script>
     <script src="../../node_modules/p5/lib/addons/p5.sound.min.js"></script>
+    <script src="../../node_modules/p5/lib/addons/p5.dom.min.js"></script>
     <script src="project2.js"></script>
 </head>
 <body>
-    <a href="../index.html">< Return to Index</a>
-    <h1>MIDI</h1>
-    <ul>
-        <li>
-            Press the space bar to start and stop sound
-        </li>
-    </ul>
+    <div id="nav">
+        <a href="../index.html">< Return to Index</a>
+    </div>
+    <div id="header">
+        <h1>Video Capture</h1>
+        <ul>
+            <li>This demo uses the webcam to capture video.</li>
+            <li>A selection of pixels from the webcam capture are chosen depending on the selected radius.</li>
+            <li>From that selection of pixels, either the Red, Green, Blue, Brightness is used to
+                determine the fill color for a circle centered at the same location as the corresponding pixel.</li>
+            <li>Radius, Pixel Color Value and Radius Color can all be chosen below.</li>
+        </ul>
+    </div>
+    <div id="canvas">
+    </div>
+    <div id="inputs">
+    </div>
 </body>
 </html>

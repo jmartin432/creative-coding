@@ -1,7 +1,7 @@
 const s = (sketch) => {
 
     let socket;
-    let host = '127.0.0.1';
+    let host = '192.168.1.35';
     let port = '3001';
     let width = 400;
     let height = 400;
