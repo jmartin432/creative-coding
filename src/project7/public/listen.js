@@ -9,10 +9,15 @@ const s = (sketch) => {
     let systems = [];
     let systemSize = 50;
     let totalSystems = 5;
-    let velocityFactor = 1000;
-    let acceleration = .1;
+    let velocityFactor = 10;
+    let acceleration = -0.1;
     let offset = 0;
     let offsetIncrement = 1.44;
+    let testMessages = [
+        ['/bark', 0.32900553941726685, 0.07359276711940765, 0.18524616956710815, 0.5177004337310791, 0.21738919615745544, 0.2545403838157654, 0.05231967568397522, 0, 0,0,0,0,0,0,0,0.006447233259677887, 0.018036864697933197, 0.03594883158802986, 0.5351402759552002, 0.24375838041305542, 0, 0, 0, 0.09293131530284882, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        ['/bark', 0,0,0,0, 0, 0.006447233259677887, 0.018036864697933197, 0.03594883158802986, 0.5351402759552002, 0.24375838041305542, 0, 0, 0.09293131530284882, 0, 0, 0, 0, 0, 0, 0, 0, 0.32900553941726685, 0.07359276711940765, 0.18524616956710815, 0.5177004337310791, 0.21738919615745544, 0.2545403838157654, 0.05231967568397522, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        ['/bark', 0,0, 0, 0, 0.006447233259677887, 0.018036864697933197, 0.03594883158802986, 0.5351402759552002, 0.24375838041305542, 0, 0, 0, 0.09293131530284882, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.32900553941726685, 0.07359276711940765, 0.18524616956710815, 0.5177004337310791, 0.21738919615745544, 0.2545403838157654, 0.05231967568397522, 0]
+    ]
 
     sketch.setup = () => {
         let url = `http://${host}:${port}`;
@@ -23,6 +28,11 @@ const s = (sketch) => {
         sketch.colorMode(sketch.HSB)
     };
 
+    sketch.keyPressed = () => {
+
+        newSystem(testMessages[Math.floor(Math.random()*3)])
+    }
+
     class System {
         constructor(particles, color, systemOffset) {
             this.particles = particles;
@@ -32,9 +42,9 @@ const s = (sketch) => {
     }
 
     class Particle {
-        constructor(height, width, angle, velocity) {
-            this.height = height;
-            this.width = width;
+        constructor(x, y, angle, velocity) {
+            this.x = x;
+            this.y = y;
             this.velocity = velocity;
             this.angle = angle;
         }
@@ -44,9 +54,11 @@ const s = (sketch) => {
         console.log('new message', data);
         if (data[0] === '/bark'){
             let particles = [];
+            let systemX = Math.floor(Math.random() * 640);
+            let systemY = Math.floor(Math.random() * 480);
             for (let i = 1; i < systemSize + 1; i++){
                 if (data[i] > 0) {
-                    let particle = new Particle(240, 320, 7.2 * i, data[i] * velocityFactor);
+                    let particle = new Particle(systemX, systemY, 7.2 * i, Math.round(data[i] * 100) / 100 * velocityFactor);
                     particles.push(particle);
                 } else {
                     particles.push(null);
@@ -56,18 +68,30 @@ const s = (sketch) => {
             if (systems.length < 5){
                 systems.push(system);
             } else {
-                systems.splice(1).push(system);
+                systems.shift();
+                systems.push(system);
             }
-            offset +=
-            console.log('System'+JSON.stringify(system));
+            offset += offsetIncrement;
+            if (offset >= 7.2){
+                offset = 0;
+            }
+            // console.log('System'+JSON.stringify(system));
         }
+        console.log(systems.length);
     }
 
     function drawSystem(system) {
+        // console.log(JSON.stringify(system));
         sketch.fill(system.color, 100, 100);
         sketch.noStroke();
         for (let i = 0; i < systemSize; i++){
-            sketch.ellipse(system.particles[i].x, system.particles[i].y, 10, 10);
+            if (system.particles[i] != null) {
+                sketch.ellipse(system.particles[i].x, system.particles[i].y, 5, 5);
+                // update particle
+                system.particles[i].velocity += acceleration;
+                system.particles[i].x += Math.cos(system.particles[i].angle) * system.particles[i].velocity;
+                system.particles[i].y += Math.sin(system.particles[i].angle) * system.particles[i].velocity;
+            }
         }
     }
 

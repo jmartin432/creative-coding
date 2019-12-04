@@ -1,9 +1,9 @@
-#N canvas 13 26 1440 793 12;
+#N canvas 0 23 1440 793 12;
 #X declare -lib timbreID/timbreIDLib;
 #X obj 932 938 *~ 0.7;
 #X obj 932 966 dac~;
 #X obj 1115 460 vsl 15 128 1 1000 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 6000 1;
+-1 -1 0 1;
 #X floatatom 1087 611 5 0 0 0 - - -;
 #X floatatom 991 936 5 0 0 0 - - -;
 #X obj 1143 531 delwrite~ sample 1000;
@@ -19,14 +19,14 @@
 #X obj 920 910 r~ loop;
 #X obj 1144 637 s~ loop;
 #X obj 1271 572 *~ 0.7;
-#X obj 778 183 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 778 183 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X obj 779 236 f;
 #X obj 31 590 hradio 15 1 0 10 empty empty empty 0 -8 0 10 -262144
--1 -1 5;
+-1 -1 0;
 #X obj 819 237 + 1;
 #X obj 106 659 vsl 15 128 200 1200 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 10700 1;
+-262144 -1 -1 0 1;
 #X obj 88 797 f;
 #X floatatom 88 824 5 0 0 0 - - -;
 #X obj 728 720 s~ note;
@@ -36,39 +36,39 @@
 -1 -1 0 1;
 #X obj 31 612 sel 0 1 2 3 4 5 6 7 8 9;
 #X obj 146 658 vsl 15 128 200 1200 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 6400 1;
+-262144 -1 -1 0 1;
 #X obj 130 796 f;
 #X floatatom 130 824 5 0 0 0 - - -;
 #X obj 190 657 vsl 15 128 200 1200 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 3100 1;
+-262144 -1 -1 0 1;
 #X obj 172 796 f;
 #X floatatom 173 823 5 0 0 0 - - -;
 #X obj 237 661 vsl 15 128 200 1200 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 10200 1;
+-262144 -1 -1 0 1;
 #X obj 216 797 f;
 #X floatatom 217 824 5 0 0 0 - - -;
 #X obj 279 660 vsl 15 128 200 1200 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 4000 1;
+-262144 -1 -1 0 1;
 #X obj 260 798 f;
 #X floatatom 260 825 5 0 0 0 - - -;
 #X obj 327 657 vsl 15 128 200 1200 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 7300 1;
+-262144 -1 -1 0 1;
 #X obj 307 798 f;
 #X floatatom 308 824 5 0 0 0 - - -;
 #X obj 374 659 vsl 15 128 200 1200 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 7600 1;
+-262144 -1 -1 0 1;
 #X obj 357 799 f;
 #X floatatom 357 825 5 0 0 0 - - -;
 #X obj 420 661 vsl 15 128 200 1200 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 3600 1;
+-262144 -1 -1 0 1;
 #X obj 402 800 f;
 #X floatatom 401 826 5 0 0 0 - - -;
 #X obj 465 659 vsl 15 128 200 1200 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 8400 1;
+-262144 -1 -1 0 1;
 #X obj 446 800 f;
 #X floatatom 448 826 5 0 0 0 - - -;
 #X obj 63 659 vsl 15 128 200 1200 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 5800 1;
+-1 -1 0 1;
 #X obj 44 798 f;
 #X floatatom 44 825 5 0 0 0 - - -;
 #X obj 779 264 mod 10;
@@ -77,7 +77,7 @@
 #X obj 936 86 vsl 15 128 200 1000 0 0 empty empty empty 0 -9 0 10 -262144
 -1 -1 0 1;
 #X obj 750 474 vsl 15 128 0 44100 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 9300 1;
+-1 -1 0 1;
 #X obj 728 616 f;
 #X floatatom 760 616 10 0 0 0 - - -;
 #N canvas 0 22 450 278 (subpatch) 0;
@@ -13230,18 +13230,17 @@ delay delayGain sampleStart;
 -1 -1;
 #N canvas 0 23 450 278 (subpatch) 0;
 #X array \$0-bark-output 50 float 1;
-#A 0 0.188837 0.201481 0.0513981 0 0 0 0 0 0 0 0.161872 0.0111187 0.0585519
-0 0.0641532 0.0693402 0.144978 0.304758 0.0528326 0 0.300955 0.255692
-0.142928 0.277308 0 0 0 0.100381 0 0.0171986 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0;
+#A 0 0.0678009 0.176525 0.509816 0.213009 0.254936 0.0529784 0 0.00650441
+0.0181252 0.0361579 0.529293 0.239467 0 0 0 0.0944822 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
 #X coords 0 1 49 -1 200 140 1 0 0;
 #X restore 396 1016 graph;
 #X obj 756 1117 print bark;
 #X obj 638 961 bark~ 2048 128 0.5;
-#X obj 729 644 tabplay~ metal-cup;
 #X obj 780 1082 s \$0-bark-output;
 #X obj 925 1136 oscformat bark;
 #X obj 805 1172 print oscformat;
+#X obj 729 644 tabplay~ saw;
 #X connect 0 0 1 0;
 #X connect 0 0 1 1;
 #X connect 2 0 3 0;
@@ -13311,7 +13310,7 @@ delay delayGain sampleStart;
 #X connect 56 0 55 1;
 #X connect 57 0 58 1;
 #X connect 57 0 59 0;
-#X connect 58 0 162 0;
+#X connect 58 0 165 0;
 #X connect 61 0 69 0;
 #X connect 62 0 61 0;
 #X connect 64 0 65 0;
@@ -13345,7 +13344,7 @@ delay delayGain sampleStart;
 #X connect 117 1 118 0;
 #X connect 118 0 106 0;
 #X connect 119 0 120 0;
-#X connect 120 0 164 0;
+#X connect 120 0 163 0;
 #X connect 123 0 119 0;
 #X connect 124 0 121 0;
 #X connect 124 1 122 0;
@@ -13392,9 +13391,7 @@ delay delayGain sampleStart;
 #X connect 145 0 141 0;
 #X connect 161 0 158 0;
 #X connect 161 1 157 0;
+#X connect 161 2 162 0;
 #X connect 161 2 163 0;
-#X connect 161 2 160 0;
-#X connect 161 2 164 0;
-#X connect 162 0 7 0;
-#X connect 164 0 107 0;
-#X connect 164 0 165 0;
+#X connect 163 0 107 0;
+#X connect 165 0 7 0;
