@@ -25,7 +25,8 @@ io.set('origins', 'http://127.0.0.1:3001/*.html');
 io.sockets.on('connection', newConnection);
 
 oscServer.on('message', function (msg) {
-    io.sockets.emit('fromPd', msg)
+    console.log(msg);
+    io.sockets.emit('bark', msg)
 });
 
 function sendPdMessage(data){

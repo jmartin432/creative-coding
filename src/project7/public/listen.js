@@ -6,51 +6,77 @@ const s = (sketch) => {
     let width =640;
     let height = 480;
     let mainCanvas;
-    let dots = [];
+    let systems = [];
+    let systemSize = 50;
+    let totalSystems = 5;
+    let velocityFactor = 1000;
+    let acceleration = .1;
+    let offset = 0;
+    let offsetIncrement = 1.44;
 
     sketch.setup = () => {
         let url = `http://${host}:${port}`;
         socket = io.connect(url);
-        socket.on('fromPd', newDot);
+        socket.on('bark', newSystem);
         mainCanvas = sketch.createCanvas(width, height);
         mainCanvas.parent('canvas');
         sketch.colorMode(sketch.HSB)
-    }
+    };
 
-    function newDot(data){
-        // console.log('new message', data);
-        let dot;
-        if (data[1] > 0){
-            dot = {
-            pitch: data[1],
-            amp: data[2],
-            // x: 320,
-            // x: Math.random() * 640,
-            // x: data[1],
-            // y: ((data[1] - 200) / 1700) * 480,
-            // y: ((data[2] - 69) / 10) * height,
-            // alpha: 100
-        };
-        // console.log(dot);
-        if (dots.length < 10) {
-            dots.push(dot)
-        } else {
-            dots.shift();
-            dots.push(dot);
-        }
+    class System {
+        constructor(particles, color, systemOffset) {
+            this.particles = particles;
+            this.color = color;
+            this.systemOffset = systemOffset;
         }
     }
 
-    function drawDot(item, i) {
-        sketch.fill(180, 100, 100, i/100);
+    class Particle {
+        constructor(height, width, angle, velocity) {
+            this.height = height;
+            this.width = width;
+            this.velocity = velocity;
+            this.angle = angle;
+        }
+    }
+
+    function newSystem(data){
+        console.log('new message', data);
+        if (data[0] === '/bark'){
+            let particles = [];
+            for (let i = 1; i < systemSize + 1; i++){
+                if (data[i] > 0) {
+                    let particle = new Particle(240, 320, 7.2 * i, data[i] * velocityFactor);
+                    particles.push(particle);
+                } else {
+                    particles.push(null);
+                }
+            }
+            let system = new System(particles, Math.random() * 360, offset);
+            if (systems.length < 5){
+                systems.push(system);
+            } else {
+                systems.splice(1).push(system);
+            }
+            offset +=
+            console.log('System'+JSON.stringify(system));
+        }
+    }
+
+    function drawSystem(system) {
+        sketch.fill(system.color, 100, 100);
         sketch.noStroke();
-        sketch.ellipse(320, 480 - ((item.pitch - 200) / 1700) * 480, item.amp, item.amp);
+        for (let i = 0; i < systemSize; i++){
+            sketch.ellipse(system.particles[i].x, system.particles[i].y, 10, 10);
+        }
     }
 
 
     sketch.draw = () => {
         sketch.background(51);
-        dots.forEach((item, index) => {drawDot(item, index)})
+        for (let i = 0; i < systems.length; i++){
+            drawSystem(systems[i])
+        }
     }
 };
 
