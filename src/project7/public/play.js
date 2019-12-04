@@ -12,13 +12,26 @@ const s = (sketch) => {
     let connectPdButton;
     let gainSlider;
     let metroSlider;
+    let delaySlider;
+    let delayGainSlider;
+    let sampleStartSlider;
+    let modulatorSliders = [];
 
     sketch.setup = () => {
         let url = `http://${host}:${port}`;
         socket = io.connect(url);
-        socket.on('fromPd', )
-        mainCanvas = sketch.createCanvas(width, height);
-        mainCanvas.parent('canvas');
+        socket.on('fromPd', );
+        // mainCanvas = sketch.createCanvas(width, height);
+        // mainCanvas.parent('canvas');
+        modulatorSliders = document.getElementById('modulators').getElementsByTagName('input');
+        for (let item of modulatorSliders){
+            item.addEventListener('input', function(){
+                let i = this.id[this.id.length - 1];
+                console.log('modulator' + i);
+                socket.emit('pd', ['/modulator', parseFloat(i), parseFloat(this.value)]);
+                }
+            )
+        }
         gainSlider = document.getElementById("gainSlider");
         gainSlider.addEventListener('input', function(){
             console.log('gain');
@@ -28,6 +41,21 @@ const s = (sketch) => {
         metroSlider.addEventListener('input', function(){
             console.log('metro');
             socket.emit('pd', ['/metro', parseFloat(metroSlider.value)]);
+        });
+        delaySlider = document.getElementById("delaySlider");
+        delaySlider.addEventListener('input', function(){
+            console.log('delay');
+            socket.emit('pd', ['/delay', parseFloat(delaySlider.value)]);
+        });
+        delayGainSlider = document.getElementById("delayGainSlider");
+        delayGainSlider.addEventListener('input', function(){
+            console.log('delayGain');
+            socket.emit('pd', ['/delayGain', parseFloat(delayGainSlider.value)]);
+        });
+        sampleStartSlider = document.getElementById("sampleStartSlider");
+        sampleStartSlider.addEventListener('input', function(){
+            console.log('sampleStart');
+            socket.emit('pd', ['/sampleStart', parseFloat(sampleStartSlider.value)]);
         });
         recordButton = document.getElementById("recordButton");
         recordButton.addEventListener('click', function(){

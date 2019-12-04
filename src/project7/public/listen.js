@@ -39,7 +39,6 @@ const s = (sketch) => {
             dots.push(dot);
         }
         }
-
     }
 
     function drawDot(item, i) {
