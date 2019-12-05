@@ -25,11 +25,11 @@ io.set('origins', 'http://127.0.0.1:3001/*.html');
 io.sockets.on('connection', newConnection);
 
 oscServer.on('message', function (msg) {
-    console.log(msg);
+    // console.log(msg);
     io.sockets.emit('bark', msg)
 });
 
-function sendPdMessage(data){
+function sendOscMessage(data){
     console.log('sending PD Message');
     console.log(data);
     let address = data[0];
@@ -44,7 +44,7 @@ function sendPdMessage(data){
 
 function newConnection(socket) {
     console.log(`new connection, ID: ${socket.id}`);
-    socket.on('pd', sendPdMessage);
+    socket.on('pd', sendOscMessage);
 }
 
 console.log(`Server listening on ${host}:${wsPort}`);
