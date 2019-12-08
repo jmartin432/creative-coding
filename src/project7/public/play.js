@@ -1,7 +1,7 @@
 const s = (sketch) => {
 
     let socket;
-    let host = '127.0.0.1';
+    let host = '192.168.0.2';
     let port = '3001';
     let width = 400;
     let height = 400;
@@ -28,7 +28,8 @@ const s = (sketch) => {
             item.addEventListener('input', function(){
                 let i = this.id[this.id.length - 1];
                 console.log('modulator' + i);
-                socket.emit('pd', ['/modulator', parseFloat(i), parseFloat(this.value)]);
+
+                socket.emit('pd', ['/modulator',  'm' + parseInt(i).toString(), parseFloat(this.value)]);
                 }
             )
         }

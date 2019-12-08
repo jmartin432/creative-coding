@@ -1,26 +1,30 @@
 const s = (sketch) => {
 
     let socket;
-    let host = '127.0.0.1';
+    let host = '192.168.0.2';
     let port = '3001';
     let width = 1440;
     let height = 900;
     let mainCanvas;
     let systems = [];
     let xOffsetInc = .01;
-    let totalSystems = 5;
-    let magnitudeFactor = 15;
-    let increment = .1;
+    let totalSystems = 20;
+    let magnitudeFactor = 5;
     let maxSteps = 100;
-    let accelerationMagnitude = -.07;
-    let lod = 100;
-    let falloff = .1;
+    let lod = 4;
+    let falloff = .7;
     let fullScreenButton;
+    let particleSize = 10;
+    let noiseAngleWindow = 4;
+    let particleSizeInc = -.1;
+    let saturation = 100;
+    let clear = false;
+    let brightness = 100;
     let testMessages = [
         ['/bark', 0.32900553941726685, 0.07359276711940765, 0.18524616956710815, 0.5177004337310791, 0.21738919615745544, 0.2545403838157654, 0.05231967568397522, 0, 0,0,0,0,0,0,0,0.006447233259677887, 0.018036864697933197, 0.03594883158802986, 0.5351402759552002, 0.24375838041305542, 0, 0, 0, 0.09293131530284882, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ['/bark', 0,0,0,0, 0, 0.006447233259677887, 0.018036864697933197, 0.03594883158802986, 0.5351402759552002, 0.24375838041305542, 0, 0, 0.09293131530284882, 0, 0, 0, 0, 0, 0, 0, 0, 0.32900553941726685, 0.07359276711940765, 0.18524616956710815, 0.5177004337310791, 0.21738919615745544, 0.2545403838157654, 0.05231967568397522, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ['/bark', 0,0, 0, 0, 0.006447233259677887, 0.018036864697933197, 0.03594883158802986, 0.5351402759552002, 0.24375838041305542, 0, 0, 0, 0.09293131530284882, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.32900553941726685, 0.07359276711940765, 0.18524616956710815, 0.5177004337310791, 0.21738919615745544, 0.2545403838157654, 0.05231967568397522, 0]
-    ]
+    ];
 
     function fullscreen(){
         let el = document.getElementById('canvas');
@@ -38,7 +42,7 @@ const s = (sketch) => {
     sketch.setup = () => {
         let url = `http://${host}:${port}`;
         socket = io.connect(url);
-        socket.on('bark', newSystem);
+        socket.on('visuals', routeMessage);
         mainCanvas = sketch.createCanvas(width, height);
         mainCanvas.parent('canvas');
         fullScreenButton = document.getElementById('fullScreenButton');
@@ -49,59 +53,75 @@ const s = (sketch) => {
 
     };
 
-    sketch.keyPressed = () => {
-        newSystem(testMessages[Math.floor(Math.random()*3)])
+    function updateNoiseDetail(l, f){
+        sketch.noiseDetail(l, f);
     }
 
+    sketch.keyPressed = () => {
+        newSystem(testMessages[Math.floor(Math.random()*3)])
+    };
+
     class Particle {
-        constructor(x, y, angle, magnitude, color) {
+        constructor(x, y, angle, magnitude, hue) {
             this.pos = sketch.createVector(x, y);
             this.magnitude = magnitude * magnitudeFactor;
             this.xOffset = (Math.random() * 10000);
-            this.vel = p5.Vector.fromAngle(sketch.noise(this.xOffset) * 4 * sketch.PI, magnitude);
-            this.color = color;
+            this.vel = p5.Vector.fromAngle(sketch.noise(this.xOffset) * noiseAngleWindow * sketch.PI, magnitude);
+            this.hue = hue;
             this.step = 0;
-            this.size = 10;
+            this.size = particleSize;
         }
 
         update() {
             this.step++;
             this.xOffset += xOffsetInc;
             if (this.step < maxSteps) {
-                this.size -= .1;
-                this.vel = p5.Vector.fromAngle(sketch.noise(this.xOffset) * 4 * sketch.PI, this.magnitude);
+                this.size += particleSizeInc;
+                this.vel = p5.Vector.fromAngle(sketch.noise(this.xOffset) * noiseAngleWindow * sketch.PI, this.magnitude);
                 this.pos.add(this.vel);
             }
         }
 
         show() {
-            sketch.fill(this.color, 100, 100);
+            sketch.strokeWeight(1);
+            sketch.stroke(20);
+            sketch.fill(this.hue, saturation, brightness);
             sketch.ellipse(this.pos.x, this.pos.y, this.size, this.size);
         }
     }
 
+    function routeMessage(data) {
+        let route = data[0].split('/');
+        route.shift();
+        if (route[1] === 'bark') newSystem(data.splice(1));
+        else if (route[1] === 'saturation') saturation = data[1];
+        else if (route[1] === 'brightness') brightness = data[1];
+        else if (route[1] === 'falloff') updateNoiseDetail(lod, data[1]);
+        else if (route[1] === 'velocity') magnitudeFactor = data[1];
+        else if (route[1] === 'lod') updateNoiseDetail(Math.ceil(data[1]), falloff);
+        else if (route[1] === 'clear') clear = true;
+    }
+
     function newSystem(data){
-        if (data[0] === '/bark'){
-            let systemX = Math.floor(Math.random() * width);
-            let systemY = Math.floor(Math.random() * height);
-            let systemColor = Math.floor(Math.random() * 360);
-            let particles = [];
-            let rotation = Math.floor(Math.random() * 1);
-            let angleIncrement = 12.5 / data.length - 1;
-            for (let i = 1; i < data.length; i++){
-                if (data[i] > 0) {
-                    let particle = new Particle(systemX, systemY, i, data[i], systemColor);
-                    particles.push(particle);
-                }
-            }
-            if (systems.length < 5){
-                systems.push(particles);
-            } else {
-                systems.shift();
-                systems.push(particles);
+        let systemX = Math.floor(Math.random() * width);
+        let systemY = Math.floor(Math.random() * height);
+        let systemColor = Math.floor(Math.random() * 360);
+        let particles = [];
+
+        for (let i = 0; i < data.length; i++){
+            if (data[i] > 0) {
+                let particle = new Particle(systemX, systemY, i, data[i], systemColor);
+                particles.push(particle);
             }
         }
-        console.log(systems.length);
+        if (systems.length < totalSystems){
+            systems.push(particles);
+        } else {
+            systems.shift();
+            systems.push(particles);
+        }
+
+        // console.log(systems.length);
     }
 
     function drawSystem(particles) {
@@ -116,9 +136,10 @@ const s = (sketch) => {
     }
 
     sketch.draw = () => {
-        if (sketch.keyIsDown(32)){
+        if (sketch.keyIsDown(32) || clear){
             systems = [];
             sketch.background(0);
+            clear = false;
         }
         for (let i = 0; i < systems.length; i++) {
             drawSystem(systems[i])

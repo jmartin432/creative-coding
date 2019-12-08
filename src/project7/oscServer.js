@@ -4,8 +4,8 @@ const server = require('http').createServer(app);
 const socket = require('socket.io')(server);
 const nodeOsc = require('node-osc');
 
-const host = '127.0.0.1';
-// const host = '192.168.1.35';
+// const host = '127.0.0.1';
+const host = '192.168.0.2';
 
 const wsPort = '3001';
 const oscOutPort = 3002;
@@ -20,13 +20,13 @@ let oscServer = new nodeOsc.Server(oscInPort, host);
 let oscClient = new nodeOsc.Client(host, oscOutPort);
 
 let io = socket;
-io.set('origins', 'http://127.0.0.1:3001/*.html');
+io.set('origins', 'http://192.168.0.2:3001/*.html', 'http://192.168.0.4:3001/*.html');
 
 io.sockets.on('connection', newConnection);
 
 oscServer.on('message', function (msg) {
     // console.log(msg);
-    io.sockets.emit('bark', msg)
+    io.sockets.emit('visuals', msg)
 });
 
 function sendOscMessage(data){
